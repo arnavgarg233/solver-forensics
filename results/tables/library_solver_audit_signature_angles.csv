@@ -1,0 +1,5 @@
+quantity,degrees
+integrator_euler_vs_rk,52.211
+grid_euler64_vs_euler96,0.503
+within_ic_spread_euler,0.046
+ratio_integrator_over_grid,103.883

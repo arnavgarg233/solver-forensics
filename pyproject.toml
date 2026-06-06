@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solver-forensics"
+version = "1.0.0"
+description = "Identify hidden discretization schemes from numerical solver output via modified-equation signatures"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Arnav Garg" }]
+keywords = ["solver verification", "modified equation", "truncation error", "scheme attribution", "scientific computing"]
+dependencies = ["numpy>=1.23", "scipy>=1.9", "scikit-learn>=1.1"]
+
+[project.urls]
+Repository = "https://github.com/arnavgarg233/solver-forensics"
+
+[tool.setuptools]
+packages = ["solver_forensics"]

@@ -1,0 +1,5 @@
+feature_set,scheme_auroc,grid_auroc,margin,nc1_auroc,A_stability_deg
+raw,0.9986,0.8333,0.1653,0.4714,0.03
+dxnorm,0.9986,0.8819,0.1167,0.4603,2.18
+common,1.0000,0.8111,0.1889,0.4148,5.57
+combined,1.0000,0.9194,0.0806,0.4887,15.40

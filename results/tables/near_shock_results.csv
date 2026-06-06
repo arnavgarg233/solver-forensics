@@ -1,0 +1,10 @@
+method,level,diff_disp,lw_bw
+interp+FD,uniform-64,0.8643,0.7786
+MLS,uniform-64,0.7964,0.6429
+weak-form,uniform-64,0.8000,0.6071
+interp+FD,jitter-50%,0.9250,0.7857
+MLS,jitter-50%,0.8679,0.6571
+weak-form,jitter-50%,0.8143,0.5500
+interp+FD,warp+jit50+miss50,0.7821,0.5643
+MLS,warp+jit50+miss50,0.7750,0.4286
+weak-form,warp+jit50+miss50,0.7429,0.5500

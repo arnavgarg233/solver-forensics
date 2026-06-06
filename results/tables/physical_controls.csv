@@ -1,0 +1,9 @@
+row,change_type,description,sensitivity,desired,decision,correct
+1,numerical,SUPG detuning alpha=0.5 (under-stabilized),1.000000,DETECT,DETECT,1
+2,numerical,Galerkin replaces nominal SUPG,1.000000,DETECT,DETECT,1
+3,numerical,matched isotropic ArtVisc (nu_art from nominal working mesh),1.000000,DETECT,DETECT,1
+4,thermal-operating,heat flux varied by alternating +10%/-10%,0.116667,NO-FAULT,NO-FAULT,1
+5,thermal-operating,Peclet varied by alternating Pe=90/110,0.083333,NO-FAULT,NO-FAULT,1
+6,thermal-operating,heater location shifted using xh0/xh1 from seeds 2000+i,0.050000,NO-FAULT,NO-FAULT,1
+7,thermal-operating,inlet temperature ramp varied using seeds 3000+i,0.066667,NO-FAULT,NO-FAULT,1
+8,grid,same nominal SUPG on coarse 44x14 vs fine 72x24 meshes,0.866667,INDETERMINATE,INDETERMINATE,1

@@ -1,0 +1,33 @@
+task,n_class,chance,baseline_UD_LogReg,baseline_floor,QDA_ceiling_UD,QDA_ceiling_FULL,QDA_ceiling_headline,best_feats,best_clf,best_acc,best_floor,lift_over_baseline,gap_to_ceiling_before,gap_to_ceiling_after,decision
+"A (9-way production schemes, 1% noise)",10,0.1000,0.5960,0.0730,0.6820,0.8080,0.8080,FULL,GBC,0.8820,0.0980,+0.2860,+0.2120,-0.0740,LIFT_artifact
+"B (4-way KdV, degraded 64/1%)",4,0.2500,0.7833,0.2292,0.7667,0.9625,0.9625,FULL,RBF-SVM,0.9917,0.2146,+0.2083,+0.1792,-0.0292,LIFT_artifact
+"B-clean (4-way KdV, clean)",4,0.2500,0.8167,0.2250,0.7583,0.9417,0.9417,FULL,RBF-SVM,0.9917,0.2437,+0.1750,+0.1250,-0.0500,LIFT_artifact
+
+# full grid: task,feats,clf,acc
+# "A (9-way production schemes, 1% noise)",FULL,GBC,0.8820
+# "A (9-way production schemes, 1% noise)",FULL,RBF-SVM,0.8760
+# "A (9-way production schemes, 1% noise)",SPEC,GBC,0.2620
+# "A (9-way production schemes, 1% noise)",SPEC,RBF-SVM,0.2560
+# "A (9-way production schemes, 1% noise)",UD+SPEC,GBC,0.7960
+# "A (9-way production schemes, 1% noise)",UD+SPEC,RBF-SVM,0.4920
+# "A (9-way production schemes, 1% noise)",FULL+SPEC,GBC,0.8780
+# "A (9-way production schemes, 1% noise)",FULL+SPEC,RBF-SVM,0.6280
+# "A (9-way production schemes, 1% noise)",FULL,QDA,0.8080
+# "B (4-way KdV, degraded 64/1%)",FULL,GBC,0.9833
+# "B (4-way KdV, degraded 64/1%)",FULL,RBF-SVM,0.9917
+# "B (4-way KdV, degraded 64/1%)",SPEC,GBC,0.8083
+# "B (4-way KdV, degraded 64/1%)",SPEC,RBF-SVM,0.8208
+# "B (4-way KdV, degraded 64/1%)",UD+SPEC,GBC,0.8250
+# "B (4-way KdV, degraded 64/1%)",UD+SPEC,RBF-SVM,0.8125
+# "B (4-way KdV, degraded 64/1%)",FULL+SPEC,GBC,0.9875
+# "B (4-way KdV, degraded 64/1%)",FULL+SPEC,RBF-SVM,0.9792
+# "B (4-way KdV, degraded 64/1%)",FULL,QDA,0.9625
+# "B-clean (4-way KdV, clean)",FULL,GBC,0.9542
+# "B-clean (4-way KdV, clean)",FULL,RBF-SVM,0.9917
+# "B-clean (4-way KdV, clean)",SPEC,GBC,0.7917
+# "B-clean (4-way KdV, clean)",SPEC,RBF-SVM,0.8042
+# "B-clean (4-way KdV, clean)",UD+SPEC,GBC,0.9000
+# "B-clean (4-way KdV, clean)",UD+SPEC,RBF-SVM,0.8250
+# "B-clean (4-way KdV, clean)",FULL+SPEC,GBC,0.9625
+# "B-clean (4-way KdV, clean)",FULL+SPEC,RBF-SVM,0.9375
+# "B-clean (4-way KdV, clean)",FULL,QDA,0.9417

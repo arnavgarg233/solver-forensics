@@ -1,0 +1,17 @@
+task,accuracy,perm_floor,chance,note
+MONO_vs_PART1,0.9500,0.4625,0.500,monolithic vs staggered (headline coupled example)
+MONO_vs_PART1_noisefree,0.9417,,0.500,deterministic-signal check
+ID3_partitioned_3way,0.6833,0.3194,0.333,PART_1/PART_2/PART_tol (non-trivial coupled core)
+ID3_partitioned_3way_noisefree,0.5778,,0.333,deterministic coupling signal
+PART1_vs_PARTtol,0.8000,0.4500,0.500,coupling-tolerance silent change
+PART1_vs_PARTtol_noisefree,0.6750,,0.500,deterministic
+PART1_vs_PART2,0.9750,0.4833,0.500,one re-lag pass (cleanest coupled contrast)
+PART1_vs_PART2_noisefree,0.9250,,0.500,DETERMINISTIC coupling-direction signal
+NC1_ic_noise,0.4542,0.4667,0.500,same coupling control (mean over 8 arbitrary-label splits; sd=0.048)
+NC2_grid_change,0.9333,0.4833,0.500,coupling/grid confound (diagnostic)
+cos_MONO_PART1,0.9965,,,signature collinearity (mono vs staggered)
+cos_PART1_PARTtol,0.9609,,,signature collinearity (tol pair)
+split_err_theta_PART1,2.159258e-01,,,PART_1 vs MONO theta rel field error
+split_err_u_PART1,2.631939e-01,,,PART_1 vs MONO u rel field error
+mono_spatial_conv_320,2.397445e-04,,,MONO_tight rel.L2 vs analytic at N_X=320
+coupling_consistency_1e-8,2.837671e-08,,,PART_tol(1e-8) vs MONO

@@ -1,0 +1,3 @@
+equation,p_A,p_B,rate_detect,snapshot_nc2,rate_nc2
+Burgers,0.9512,1.9884,1.0000,0.5867,0.5900
+KdV,1.8654,0.7440,1.0000,0.8467,0.4500

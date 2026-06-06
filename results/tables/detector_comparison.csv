@@ -1,0 +1,25 @@
+scenario,row,detector,accuracy,perm_floor_mean,perm_floor_95,chance,pass,goal
+1D,detect,signature,0.9667,0.4798,0.5917,0.5000,1,high(>floor)
+1D,detect,resid_norm,1.0000,0.4608,0.5587,0.5000,1,high(>floor)
+1D,detect,order_acc,0.9167,0.4715,0.5754,0.5000,1,high(>floor)
+1D,reject,signature,0.4750,0.4692,0.5667,0.5000,1,low(~chance)
+1D,reject,resid_norm,0.5167,0.4427,0.5342,0.5000,1,low(~chance)
+1D,reject,order_acc,0.4583,0.4683,0.5587,0.5000,1,low(~chance)
+1D,name,signature,0.8250,0.2169,0.2629,0.2500,1,high(>floor)
+1D,name,resid_norm,0.7208,0.2106,0.2544,0.2500,1,high(>floor)
+1D,name,order_acc,0.5833,0.2021,0.2506,0.2500,0,high(>floor)
+2D,detect,signature,1.0000,0.4819,0.5881,0.5000,1,high(>floor)
+2D,detect,resid_norm,0.9875,0.4422,0.5875,0.5000,1,high(>floor)
+2D,detect,order_acc,1.0000,0.4378,0.5750,0.5000,1,high(>floor)
+2D,reject,signature,0.4625,0.4781,0.5894,0.5000,1,low(~chance)
+2D,reject,resid_norm,0.5250,0.4434,0.5375,0.5000,1,low(~chance)
+2D,reject,order_acc,0.6250,0.4319,0.5506,0.5000,0,low(~chance)
+2D,name,signature,0.9833,0.3056,0.3917,0.3333,1,high(>floor)
+2D,name,resid_norm,0.7583,0.2790,0.3683,0.3333,1,high(>floor)
+2D,name,order_acc,0.9667,0.2777,0.3421,0.3333,1,high(>floor)
+meta,solver_gate,central_spatial_order_1d,1.9760,,,,1,2nd-order convergent
+meta,solver_gate,central_order_2d,1.9759,,,,1,2nd-order convergent
+meta,diag_order3,p_central_1d,0.1838,,,,,resid-vs-N slope at sigma=1% (WEAK: time/noise contaminated)
+meta,diag_order3,p_upwind_1d,0.5955,,,,,resid-vs-N slope at sigma=1%
+meta,diag_order3,p_central_2d,1.9759,,,,,resid-vs-N slope exact-ref (STRONG)
+meta,diag_order3,p_upwind_2d,0.4677,,,,,resid-vs-N slope exact-ref

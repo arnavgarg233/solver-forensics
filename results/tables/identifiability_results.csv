@@ -1,0 +1,73 @@
+pair,kind,k_nyquist,sigma,dprime_raw,dfeat_matched,predicted_auroc,measured_coef
+upwi/lax_,diff-vs-disp (easy),3,0.020,0.439,0.654,0.5870,0.7640
+upwi/lax_,diff-vs-disp (easy),3,0.080,0.659,0.630,0.6292,0.6480
+upwi/lax_,diff-vs-disp (easy),3,0.200,0.747,0.312,0.6457,0.4720
+upwi/lax_,diff-vs-disp (easy),4,0.020,0.675,0.677,0.6321,0.8380
+upwi/lax_,diff-vs-disp (easy),4,0.080,0.826,0.612,0.6602,0.7720
+upwi/lax_,diff-vs-disp (easy),4,0.200,0.888,0.346,0.6715,0.6260
+upwi/lax_,diff-vs-disp (easy),6,0.020,0.688,1.304,0.6346,0.9880
+upwi/lax_,diff-vs-disp (easy),6,0.080,0.779,0.940,0.6516,0.8560
+upwi/lax_,diff-vs-disp (easy),6,0.200,0.861,0.820,0.6666,0.7880
+upwi/lax_,diff-vs-disp (easy),8,0.020,0.825,1.561,0.6600,0.9820
+upwi/lax_,diff-vs-disp (easy),8,0.080,0.795,1.209,0.6546,0.9100
+upwi/lax_,diff-vs-disp (easy),8,0.200,0.851,0.909,0.6648,0.8480
+upwi/lax_,diff-vs-disp (easy),12,0.020,1.062,1.955,0.7024,1.0000
+upwi/lax_,diff-vs-disp (easy),12,0.080,1.070,1.243,0.7036,0.9920
+upwi/lax_,diff-vs-disp (easy),12,0.200,1.133,1.043,0.7145,0.9480
+upwi/lax_,diff-vs-disp (easy),16,0.020,1.259,1.791,0.7355,1.0000
+upwi/lax_,diff-vs-disp (easy),16,0.080,1.315,1.403,0.7446,0.9860
+upwi/lax_,diff-vs-disp (easy),16,0.200,1.368,0.555,0.7530,0.9840
+upwi/beam,diff-vs-disp (easy),3,0.020,0.441,0.657,0.5872,0.7540
+upwi/beam,diff-vs-disp (easy),3,0.080,0.668,0.558,0.6307,0.6700
+upwi/beam,diff-vs-disp (easy),3,0.200,0.754,0.316,0.6469,0.4720
+upwi/beam,diff-vs-disp (easy),4,0.020,0.665,0.779,0.6303,0.8380
+upwi/beam,diff-vs-disp (easy),4,0.080,0.816,0.737,0.6584,0.7640
+upwi/beam,diff-vs-disp (easy),4,0.200,0.882,0.455,0.6704,0.6680
+upwi/beam,diff-vs-disp (easy),6,0.020,0.690,1.301,0.6349,0.9460
+upwi/beam,diff-vs-disp (easy),6,0.080,0.765,1.036,0.6489,0.9060
+upwi/beam,diff-vs-disp (easy),6,0.200,0.843,0.978,0.6633,0.8300
+upwi/beam,diff-vs-disp (easy),8,0.020,0.791,1.438,0.6537,0.9880
+upwi/beam,diff-vs-disp (easy),8,0.080,0.768,1.148,0.6496,0.9260
+upwi/beam,diff-vs-disp (easy),8,0.200,0.834,1.093,0.6617,0.9260
+upwi/beam,diff-vs-disp (easy),12,0.020,1.064,1.853,0.7027,0.9920
+upwi/beam,diff-vs-disp (easy),12,0.080,1.068,0.926,0.7033,0.9700
+upwi/beam,diff-vs-disp (easy),12,0.200,1.131,0.633,0.7141,0.6900
+upwi/beam,diff-vs-disp (easy),16,0.020,1.259,1.716,0.7355,1.0000
+upwi/beam,diff-vs-disp (easy),16,0.080,1.307,1.331,0.7433,0.9760
+upwi/beam,diff-vs-disp (easy),16,0.200,1.354,0.632,0.7507,0.9560
+upwi/lax_,both-diffusive (med),3,0.020,0.342,0.321,0.5678,0.5480
+upwi/lax_,both-diffusive (med),3,0.080,0.469,0.377,0.5927,0.5780
+upwi/lax_,both-diffusive (med),3,0.200,0.630,0.182,0.6236,0.5060
+upwi/lax_,both-diffusive (med),4,0.020,0.451,0.305,0.5892,0.5980
+upwi/lax_,both-diffusive (med),4,0.080,0.413,0.296,0.5818,0.4920
+upwi/lax_,both-diffusive (med),4,0.200,0.474,0.331,0.5936,0.5360
+upwi/lax_,both-diffusive (med),6,0.020,0.459,0.968,0.5907,0.8360
+upwi/lax_,both-diffusive (med),6,0.080,0.694,0.486,0.6357,0.6660
+upwi/lax_,both-diffusive (med),6,0.200,0.858,0.385,0.6661,0.6080
+upwi/lax_,both-diffusive (med),8,0.020,0.354,0.819,0.5702,0.8540
+upwi/lax_,both-diffusive (med),8,0.080,0.509,0.574,0.6004,0.6900
+upwi/lax_,both-diffusive (med),8,0.200,0.677,0.492,0.6325,0.5260
+upwi/lax_,both-diffusive (med),12,0.020,0.800,0.700,0.6555,0.9480
+upwi/lax_,both-diffusive (med),12,0.080,0.827,0.497,0.6604,0.8440
+upwi/lax_,both-diffusive (med),12,0.200,0.898,0.139,0.6732,0.3960
+upwi/lax_,both-diffusive (med),16,0.020,0.981,3.635,0.6881,0.9860
+upwi/lax_,both-diffusive (med),16,0.080,1.005,1.137,0.6924,0.8180
+upwi/lax_,both-diffusive (med),16,0.200,1.072,0.262,0.7039,0.5600
+lax_/beam,same-order c3-sign (hard),3,0.020,0.854,0.221,0.6653,0.4080
+lax_/beam,same-order c3-sign (hard),3,0.080,0.799,0.284,0.6553,0.4640
+lax_/beam,same-order c3-sign (hard),3,0.200,0.788,0.348,0.6533,0.4580
+lax_/beam,same-order c3-sign (hard),4,0.020,0.586,0.662,0.6152,0.7220
+lax_/beam,same-order c3-sign (hard),4,0.080,0.740,0.437,0.6444,0.6240
+lax_/beam,same-order c3-sign (hard),4,0.200,0.756,0.372,0.6473,0.5940
+lax_/beam,same-order c3-sign (hard),6,0.020,0.792,1.456,0.6539,0.9780
+lax_/beam,same-order c3-sign (hard),6,0.080,1.078,1.037,0.7051,0.8460
+lax_/beam,same-order c3-sign (hard),6,0.200,1.149,0.529,0.7173,0.6800
+lax_/beam,same-order c3-sign (hard),8,0.020,0.982,1.865,0.6882,1.0000
+lax_/beam,same-order c3-sign (hard),8,0.080,1.031,1.069,0.6969,0.9360
+lax_/beam,same-order c3-sign (hard),8,0.200,1.104,0.886,0.7096,0.8360
+lax_/beam,same-order c3-sign (hard),12,0.020,1.215,2.427,0.7283,0.9900
+lax_/beam,same-order c3-sign (hard),12,0.080,1.213,1.195,0.7279,0.9840
+lax_/beam,same-order c3-sign (hard),12,0.200,1.200,1.027,0.7258,0.9320
+lax_/beam,same-order c3-sign (hard),16,0.020,1.378,1.909,0.7546,1.0000
+lax_/beam,same-order c3-sign (hard),16,0.080,1.453,1.408,0.7662,0.9840
+lax_/beam,same-order c3-sign (hard),16,0.200,1.419,0.759,0.7609,0.9240

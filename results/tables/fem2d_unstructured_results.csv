@@ -1,0 +1,13 @@
+task,accuracy,perm_floor
+id_4way,0.5250,0.2302
+dissipation,0.7521,0.4979
+integrator,0.5417,0.4833
+mass,0.6583,0.4875
+mass_sigma0,0.6542,0.4630
+nc1,0.4917,0.5000
+nc2,0.5542,0.4688
+diss_cross_mesh_transfer,0.7170,
+diss_within_coarse_mesh,0.7080,
+diss_transfer_narrow_2class,0.5420,
+diss_within_coarse_narrow_2class,0.5210,
+convergence_rate,1.9380,

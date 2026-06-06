@@ -1,0 +1,4 @@
+equation,single_snapshot_NC2,rate_feature_NC2,rate_detection,seed_std_snap,seed_std_rate,seed_std_det,fold_std_snap,fold_std_rate,fold_std_det,p_A,p_B,ref_relL2,ref_converged
+Burgers,0.6554,0.6070,1.0000,0.1105,0.0460,0.0000,0.1493,0.0796,0.0000,0.9616,1.9849,3.968e-11,1
+KdV,0.9395,0.4961,1.0000,0.0235,0.0574,0.0000,0.0695,0.0577,0.0000,1.8700,0.7401,9.531e-08,1
+Kawahara,0.8750,0.5182,1.0000,0.0377,0.0178,0.0000,0.0828,0.0736,0.0000,1.9411,0.9850,1.132e-15,1

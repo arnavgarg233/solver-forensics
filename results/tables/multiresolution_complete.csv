@@ -1,0 +1,4 @@
+equation,single_snapshot_NC2,rate_feature_NC2,rate_detection,seed_std,fold_std
+Burgers,0.6554,0.6070,1.0000,0.0522,0.0763
+KdV,0.9395,0.4961,1.0000,0.0270,0.0424
+Kawahara,0.8750,0.5182,1.0000,0.0185,0.0521

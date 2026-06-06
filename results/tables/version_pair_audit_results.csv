@@ -1,0 +1,15 @@
+task,accuracy,perm_floor,chance,note
+PREDICTION_kind,,,time_integration,blind call written before reading changelog
+PREDICTION_text,,,,time-integration / adaptive step-control change (small; IC-scattered residual difference; NO consistent modified-equation term; spatial stencil unchanged)
+field_rel_diff_BvsA,2.505373e-04,,,mean ||B-A||/||A||
+diff_direction_scatter_deg,34.6951,,,angular scatter of (B-A) library direction
+dnorm_sign_consistent,0,,,1 if sign(||B||-||A||) same for all ICs
+AvsB_attribution_noisefree,0.4857,0.4563,0.500,version A vs B from residual signature
+AvsB_attribution_noise1pct,0.5589,0.4688,0.500,version A vs B at 1% field noise
+cos_meanSig_A_B,0.9952,,,collinearity of mean A/B residual signatures
+NC1_ic_noise,0.4009,0.4018,0.500,same version (B) control; mean over 8 arbitrary-label splits sd=0.087
+NC2_grid_change,0.6536,0.4446,0.500,N=128 vs N=160 same version (the confound)
+ref_time_conv_nsub8000,5.630e-14,,,reference time-step self-convergence
+ref_space_conv,1.387e-15,,,reference spatial self-convergence
+CONFIRM_changelog,,,,py-pde public release notes (GitHub Releases; the project's changelog) between 0.48.0 and 0.56.1 document TIME-INTEGRATION / solver-loop changes and NO change to the spatial FD stencil. Key entries: v0.50.0 PR#737 'Introduced backends' (separates compilation from the stepper structure); v0.52.0 PR#783 'Improve time tolerance handling in simulation loop for accuracy'; v0.54.0 PR#814 'Clarified the terms solver and stepper'; PR#817 'Add tolerance handling in ProgressTracker for final time check'; PR#819 EulerSolver/RungeKuttaSolver docstrings. The default `adaptive=True` Euler stepper's step sequence changed accordingly. No release in 0.49-0.56 documents any change to the Cartesian finite-difference Laplacian or gradient stencil -- consistent with our verified byte-identical operator output across 0.44/0.48/0.52/0.56.1. => a SOLVER (time-integration / step-control) change; NOT a stencil change.
+CONFIRM_prediction_matches,1,,,1 if blind KIND matches the documented change

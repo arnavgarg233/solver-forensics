@@ -1,0 +1,8 @@
+metric,value,floor
+p_P1,1.9623,
+p_P2,4.0637,
+p_P1_unstruct,2.1848,
+rate_detect,1.0000,0.4238
+snapshot_detect,0.7667,0.4500
+snapshot_nc2,0.8381,0.4405
+rate_nc2,0.5286,0.4333

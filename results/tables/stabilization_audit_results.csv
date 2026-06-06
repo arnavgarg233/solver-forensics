@@ -1,0 +1,15 @@
+task,accuracy,perm_floor,chance,note
+ID3_stabilized_3way,0.4056,0.2917,0.333,SUPG/ArtVisc_m/ArtVisc_up
+galerkin_vs_stabilized_balanced,1.0000,0.4790,0.500,HEADLINE: balanced 60:60 (silent loss/gain of stabilization)
+galerkin_vs_stabilized_imbalanced,0.9875,0.7500,0.750,raw 60:180 (majority-class floor 0.75; use the balanced row above)
+galerkin_vs_SUPG,0.9667,0.4833,0.500,pairwise
+SUPG_vs_ArtVisc_matched,0.4917,0.4583,0.500,ADVERSARIAL matched added-diffusion (hard)
+SUPG_vs_ArtVisc_matched_noisefree,0.6583,,0.500,deterministic-signal check
+SUPG_vs_ArtVisc_upwind,0.6167,0.4542,0.500,REALISTIC unmatched |a|h/2 rule
+NC1_ic_noise,0.5000,0.4500,0.500,same scheme control (mean over 8 arbitrary-label splits; sd=0.048)
+NC2_grid_change,0.9250,0.4750,0.500,h-dependent stabilization confound (diagnostic)
+cos_SUPG_ArtVisc_matched,1.0000,,,signature collinearity (matched)
+cos_SUPG_ArtVisc_upwind,1.0000,,,signature collinearity (unmatched)
+Pe_h,5.0000,,,mesh Peclet
+tau,0.010001,,,SUPG tau
+nu_match_over_D,4.0005,,,SUPG added visc / physical diffusion

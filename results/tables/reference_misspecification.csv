@@ -1,0 +1,13 @@
+regime,reference,label,ref_solver_err_ratio,diff_vs_disp_auroc_within_ref,dd_perm_floor,xref_acc_genuine_trained,fourway_id_acc,id_perm_floor,coherence_deg,dAUROC_vs_genuine,d4wayID_vs_genuine
+"clean",REF_SPECTRAL,"spectral truth (genuine)",0.0000,1.0000,0.4943,1.0000,1.0000,0.2225,3.75,+0.0000,+0.0000
+"clean",REF_FINE_UPWIND,"fine upwind (biased diffusive)",1.8697,1.0000,0.5046,1.0000,1.0000,0.2550,0.01,+0.0000,+0.0000
+"clean",REF_FINE_LW,"fine Lax-Wendroff (biased dispersive)",0.1465,1.0000,0.4973,0.9400,1.0000,0.2150,2.23,+0.0000,+0.0000
+"clean",REF_FINE_BW,"fine beam-warming (biased dispersive)",0.0977,1.0000,0.4942,0.9700,1.0000,0.2200,3.24,+0.0000,+0.0000
+"clean",REF_COARSE_SPEC,"under-resolved spectral (contrast)",0.0000,1.0000,0.4943,1.0000,1.0000,0.2225,3.75,+0.0000,+0.0000
+"clean",SELF_CANCEL_LW_vs_LW,"LW solver vs same-grid LW reference",0.0000,NA,NA,1.0000,NA,NA,90.00,90.00,FIRED
+"degraded(1% noise)",REF_SPECTRAL,"spectral truth (genuine)",0.0000,1.0000,0.5086,1.0000,0.7500,0.2100,1.33,+0.0000,+0.0000
+"degraded(1% noise)",REF_FINE_UPWIND,"fine upwind (biased diffusive)",1.8697,1.0000,0.5057,0.5000,0.9950,0.2250,0.02,+0.0000,+0.2450
+"degraded(1% noise)",REF_FINE_LW,"fine Lax-Wendroff (biased dispersive)",0.1465,1.0000,0.4946,1.0000,0.7500,0.2150,0.76,+0.0000,+0.0000
+"degraded(1% noise)",REF_FINE_BW,"fine beam-warming (biased dispersive)",0.0977,1.0000,0.5022,1.0000,0.7500,0.2225,1.20,+0.0000,+0.0000
+"degraded(1% noise)",REF_COARSE_SPEC,"under-resolved spectral (contrast)",0.0000,1.0000,0.5102,1.0000,0.7500,0.2050,0.68,+0.0000,+0.0000
+"degraded(1% noise)",SELF_CANCEL_LW_vs_LW,"LW solver vs same-grid LW reference",0.0000,NA,NA,1.0000,NA,NA,0.86,8.40,FIRED

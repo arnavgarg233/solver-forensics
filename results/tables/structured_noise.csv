@@ -1,0 +1,6 @@
+noise_model,description,rms_ratio,diff_disp_acc,perm_floor,nc1,nc2,cos_diff_to_baseline,cos_disp_to_baseline,delta_vs_baseline
+G,"additive white Gaussian (baseline)",1.0000,0.9792,0.4708,0.4139,0.8000,1.0000,0.9997,+0.0000
+Clp,"correlated low-pass (smooth)",1.0000,0.8542,0.4688,0.4028,0.9250,1.0000,0.3511,-0.1250
+Cd,"correlated derivative-mimicking (adversarial)",1.0000,0.9333,0.4729,0.4972,0.8000,1.0000,0.9954,-0.0458
+Mul,"multiplicative (signal-dependent)",1.0000,0.9042,0.4667,0.4583,0.8000,1.0000,0.9984,-0.0750
+Q,"quantized",0.9987,0.9833,0.4729,0.4222,0.7917,1.0000,0.9936,+0.0042

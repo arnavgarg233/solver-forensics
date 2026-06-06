@@ -1,0 +1,6 @@
+contrast,kind,classes,feature_dprime,lda_ceiling,iid_bayes_ceiling,realizable_qda_ceiling,measured_acc,measured_auroc,perm_floor,gap_meas_minus_qdaceil
+lumped_CD|consistent_FEM,mass matrix (same-order, fine),2,0.9032,0.6742,0.7105,0.6833,0.6667,0.7125,0.4333,-0.0167
+lumped_CD|newmark_damped,dispersive vs dissipative,2,5.0229,0.9940,1.0000,0.9833,0.9750,1.0000,0.4625,-0.0083
+consistent_FEM|newmark_damped,dispersive vs dissipative,2,1.8336,0.8204,0.9991,0.9833,0.8333,1.0000,0.4708,-0.1500
+lumped|consistent|newmark,3-way scheme ID,3,NA,NA,0.8063,0.7778,0.6667,NA,0.3000,-0.1111
+mass_sigma0,mass matrix @ sigma=0,2,0.0022,NA,0.5006,0.5006,0.5000,NA,NA,-0.0006

@@ -1,0 +1,17 @@
+construction,alpha,noise,detection_sensitivity,sig_dist_from_nominal
+discrepancy,0.0,0.00,1.000000,0.206031
+discrepancy,0.5,0.00,1.000000,0.046782
+discrepancy,1.0,0.00,0.000000,0.000000
+discrepancy,1.5,0.00,0.958333,0.012683
+pde_residual,0.0,0.00,1.000000,0.046538
+pde_residual,0.5,0.00,1.000000,0.011699
+pde_residual,1.0,0.00,0.000000,0.000000
+pde_residual,1.5,0.00,1.000000,0.008323
+discrepancy,0.0,0.01,1.000000,0.163223
+discrepancy,0.5,0.01,1.000000,0.019285
+discrepancy,1.0,0.01,0.000000,0.000000
+discrepancy,1.5,0.01,0.979167,0.003112
+pde_residual,0.0,0.01,0.291667,0.000058
+pde_residual,0.5,0.01,0.145833,0.000019
+pde_residual,1.0,0.01,0.000000,0.000000
+pde_residual,1.5,0.01,0.125000,0.000014

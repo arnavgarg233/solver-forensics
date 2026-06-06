@@ -1,0 +1,33 @@
+experiment,n_ic,folds,headline_number,value,seed_std,fold_std
+open_solver_audit,60 paired,5,A_vs_B scheme change clean,1.000,0.000,0.000
+open_solver_audit,60 paired,5,A_vs_B @1% noise,0.983,0.009,0.020
+open_solver_audit,30+30,5,NC1 IC+noise @1%,0.417,0.093,0.075
+open_solver_audit,60 paired,5,NC2 grid/CFL @1%,0.717,0.038,0.041
+open_solver_audit,60 paired,5,scheme-grid MARGIN @1%,0.267,0.036,n/a unpaired
+coefficient_attribution,200/60,5,diff-vs-disp acc sigma0,0.995,0.003,0.010
+coefficient_attribution,200/60,5,diff-vs-disp acc sigma0.01,0.996,0.001,0.008
+coefficient_attribution,200/60,5,diff-vs-disp acc sigma0.05,0.965,0.014,0.015
+coefficient_attribution,200/480,single fit,grid/CFL transfer pooled,0.988,0.006,n/a
+coefficient_attribution,200/60,single fit,grid/CFL transfer worst cell,0.938,0.023,n/a
+audit_2d,40x2,5,detection sigma0,0.988,0.000,0.025
+audit_2d,40x2,5,detection sigma1%,1.000,0.000,0.000
+audit_2d,40x2,5,detection sigma5%,1.000,0.000,0.000
+audit_2d,40+40,5,NC1,0.500,0.034,0.137
+audit_2d,40+40,5,NC2 grid 64v96,0.775,0.010,0.094
+audit_2d,30x2,5,rate-based detection,1.000,0.000,0.000
+audit_2d,30,rate fit,convergence rate p upwind,0.484,0.002,0.084
+audit_2d,30,rate fit,convergence rate p central,1.976,0.000,0.006
+multiresolution_audit,60x4,5,order-feature diff-disp sigma0,1.000,0.000,0.000
+multiresolution_audit,60x4,5,order-feature diff-disp sigma1%,0.963,0.020,0.045
+multiresolution_audit,60v60,5,order-feature NC2 sigma0,0.629,0.017,0.027
+multiresolution_audit,60v60,5,order-feature NC2 sigma1%,0.590,0.019,0.052
+multiresolution_audit,60v60,5,single-snapshot NC2 sigma0,0.990,0.021,0.014
+multiresolution_audit,60v60,5,single-snapshot NC2 sigma1%,0.792,0.027,0.063
+production_schemes,50x10,5,9-way scheme ID sigma1%,0.596,0.030,0.026
+production_schemes,50,5,permutation floor 9-way,0.082,0.004,n/a
+multiresolution_nonlinear,28,5,KdV rate-detection,1.000,n/a,n/a
+multiresolution_nonlinear,28,5,KdV single-snapshot NC2,0.847,n/a,n/a
+multiresolution_nonlinear,28,5,KdV rate-feature NC2,0.450,n/a,n/a
+wave_attribution,60,5,3-way scheme ID (floor 0.32),0.667,0.018,n/a
+wave_attribution,60,5,dissipation (floor 0.66 imbalanced),0.889,0.037,n/a
+wave_attribution,60,5,mass-matrix (floor 0.47; chance at sigma0),0.603,0.027,n/a

@@ -1,0 +1,9 @@
+factor,measurement,n_repeats,mean_acc,sd_acc,cv_acc,sig_dir_cos_mean
+initial_conditions,M1_PRESENCE,5,0.960000,0.012247,0.012758,0.997164
+initial_conditions,M2_SILENT_TAU,5,0.937500,0.017678,0.018856,0.997164
+noise_realizations,M1_PRESENCE,5,0.975000,0.000000,0.000000,0.999980
+noise_realizations,M2_SILENT_TAU,5,0.965000,0.009354,0.009693,0.999980
+working_grid,M1_PRESENCE,5,0.955000,0.018708,0.019590,0.967097
+working_grid,M2_SILENT_TAU,5,0.900000,0.017678,0.019642,0.967097
+reference_resolution,M1_PRESENCE,5,0.975000,0.000000,0.000000,0.999783
+reference_resolution,M2_SILENT_TAU,5,0.975000,0.000000,0.000000,0.999783

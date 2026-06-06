@@ -1,0 +1,4 @@
+scenario,description,naive_acc,perm_floor,grid_controlled,confound_discriminable,decision
+1,controlled grid: galerkin vs supg(tau_scale=1.0) on n_side=28 seed=2026,0.9812,0.4844,True,True,GO
+2,uncontrolled grid: galerkin n_side=22 seed=3001 vs galerkin n_side=40 seed=3002,1.0000,0.4906,False,True,INDETERMINATE
+3_active_query,"supg(tau_scale=1.0) n_side=20,28,40; rel-L2=20:1.0687e-01;28:7.2513e-02;40:4.1228e-02; monotone_decreasing=True",,,active-query,,GO-after-query

@@ -1,0 +1,10 @@
+row,change_type,description,sensitivity,desired,decision,correct
+1,numerical,SUPG detuning alpha=0.5 vs nominal SUPG alpha=1,0.041667,DETECT,NO-FAULT,0
+2,numerical,Galerkin replaces nominal SUPG,0.979167,DETECT,DETECT,1
+3,numerical,matched isotropic ArtVisc vs nominal SUPG; SUPG-vs-ArtVisc separability,0.479167,DETECT,DETECT,1
+4,operating,"heat generation q_base scaled by -10%, +10%, -20%, +20% (matched references)",0.057292,NO-FAULT,NO-FAULT,1
+5,operating,"coolant Ubar scaled by -10%, +10%, -20%, +20% (matched references)",0.041667,NO-FAULT,NO-FAULT,1
+6,operating,inlet-ramp operating profile set to +3 K and -3 K (matched references),0.062500,NO-FAULT,NO-FAULT,1
+7,operating,cell conductivity KB scaled by -10% and +10% (matched references),0.031250,NO-FAULT,NO-FAULT,1
+8,operating,one-cell heat-generation factor set to +10% and -10% (physical change; matched references),0.010417,NO-FAULT,NO-FAULT,1
+9,grid,same nominal SUPG on coarse n_cell_x=11 and fine n_cell_x=22 meshes; grid uncontrolled,0.187500,INDETERMINATE,DETECT,0

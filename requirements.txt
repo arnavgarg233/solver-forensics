@@ -1,0 +1,9 @@
+# A modified-equation signature method for identifying hidden discretization schemes. CPU-only; tested on macOS / Apple Silicon.
+numpy>=2.0
+scipy>=1.15
+scikit-learn>=1.7
+matplotlib>=3.9
+seaborn>=0.13         # figure styling in paper/make_figures.py
+py-pde>=0.56          # open solver used in experiments/audit/open_solver_audit.py
+
+# All scripts are numpy-2-safe and deterministic given the fixed seeds.

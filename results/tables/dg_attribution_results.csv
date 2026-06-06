@@ -1,0 +1,3 @@
+regime,flux_P1,flux_P1_floor,flux_P2,flux_P2_floor,flux_P3,flux_P3_floor,order3way,order3way_floor,id6way,id6way_floor,NC1,NC2
+"clean",1.0000,0.4943,1.0000,0.4998,1.0000,0.5236,0.9000,0.2750,0.9375,0.1417,0.5817,0.9656
+"1% noise",1.0000,0.4971,1.0000,0.5274,0.8344,0.4680,0.8917,0.2917,0.7375,0.1437,0.5350,0.8469

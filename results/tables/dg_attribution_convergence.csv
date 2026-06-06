@@ -1,0 +1,7 @@
+order_p,flux,measured_slope,expected_order,finest_L2err,stable
+1,upwind,1.9955,2,3.256284e-02,True
+1,central,1.4640,2,9.398339e-02,True
+2,upwind,3.3244,3,2.518127e-03,True
+2,central,4.1750,3,2.701308e-03,True
+3,upwind,4.0432,4,6.756725e-04,True
+3,central,3.6810,4,1.225320e-03,True

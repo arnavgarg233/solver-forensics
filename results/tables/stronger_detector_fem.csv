@@ -1,0 +1,11 @@
+contrast,unit_direction,best_stronger,qda_reference,lift,verdict
+mass_matrix(sigma=0.01),0.6667,0.7000,0.6833,+0.0167,information_limited
+mass_matrix(sigma=0),0.5000,0.9500,0.9500,+0.0000,information_limited
+time_integrator,0.8889,0.9944,0.9778,+0.0167,information_limited
+dissipation,0.8889,0.9944,0.9778,+0.0167,information_limited
+
+# detail: contrast,base_floor,qda_ud,qda_full,gbc,svc,best_clf,best_floor,full_verdict
+# mass_matrix(sigma=0.01),0.4792,0.6833,0.5917,0.6833,0.7000,RBF-SVM,0.4875,"INFORMATION-LIMITED: the strictly-stronger nonlinear detectors (GBC/RBF-SVM on the full unnormalized coefficient vector, nested GroupKFold-by-IC) do NOT exceed the Gaussian-QDA reference (best FULL+RBF-SVM=0.700 vs QDA 0.683, lift +0.017). No detector family beats Gaussian-Bayes here => the residual is genuinely information-limited, not Gaussian-model-limited."
+# mass_matrix(sigma=0),0.4417,0.5083,0.9500,0.9500,0.9500,GBC,0.4833,"INFORMATION-LIMITED: the strictly-stronger nonlinear detectors (GBC/RBF-SVM on the full unnormalized coefficient vector, nested GroupKFold-by-IC) do NOT exceed the Gaussian-QDA reference (best FULL+GBC=0.950 vs QDA 0.950, lift +0.000). No detector family beats Gaussian-Bayes here => the residual is genuinely information-limited, not Gaussian-model-limited."
+# time_integrator,0.6611,0.8778,0.9778,0.9944,0.9944,GBC,0.6306,"INFORMATION-LIMITED: the strictly-stronger nonlinear detectors (GBC/RBF-SVM on the full unnormalized coefficient vector, nested GroupKFold-by-IC) do NOT exceed the Gaussian-QDA reference (best FULL+GBC=0.994 vs QDA 0.978, lift +0.017). No detector family beats Gaussian-Bayes here => the residual is genuinely information-limited, not Gaussian-model-limited."
+# dissipation,0.6611,0.8778,0.9778,0.9944,0.9944,GBC,0.6389,"INFORMATION-LIMITED: the strictly-stronger nonlinear detectors (GBC/RBF-SVM on the full unnormalized coefficient vector, nested GroupKFold-by-IC) do NOT exceed the Gaussian-QDA reference (best FULL+GBC=0.994 vs QDA 0.978, lift +0.017). No detector family beats Gaussian-Bayes here => the residual is genuinely information-limited, not Gaussian-model-limited."
