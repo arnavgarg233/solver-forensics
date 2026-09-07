@@ -4,9 +4,10 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.dirname(os.path.dirname(_HERE))
 sys.path.insert(0, os.path.join(_ROOT, "src", "thermal"))
 sys.path.insert(0, os.path.join(_ROOT, "src", "audit"))
+sys.path.insert(0, os.path.join(_ROOT, "src", "measurement"))
 import heated_channel as HC       # the validated thermal foundation
-import supg_2d_engineering as A    # stat helpers: A.feats, A.cv_acc, A.perm_floor, A._clf, A.LIB
-from sklearn.model_selection import GroupKFold, cross_val_predict
+import supg_2d_engineering as A    # grid/library anchor: A.GRID_OBS, A.LIB
+import cross_conformal as CC       # measured 5% split-conformal detection
 TAB = os.path.join(_ROOT, "results", "tables"); os.makedirs(TAB, exist_ok=True)
 
 import csv
@@ -22,61 +23,30 @@ ALPHAS_STRONG = np.array((1.0, 1.1, 1.2, 1.3, 1.4, 1.5), dtype=float)
 DIRECTIONS = (("weaken", ALPHAS_WEAK), ("strengthen", ALPHAS_STRONG))
 ALL_ALPHAS = np.array(sorted(set(ALPHAS_WEAK) | set(ALPHAS_STRONG)), dtype=float)
 SIGMAS = (0.0, 0.01, 0.05)
-TARGET_FPR = 0.05
+TARGET_FPR = CC.TARGET_FPR
 TARGET_SENSITIVITY = 0.95
 N_IC = HC.N_IC
+MAX_DELTA = 0.5
 
-DETECTORS = ("signature", "Twall_max", "Nu_mean", "fullfield_T")
+# Every detector, including the one-dimensional thermal outputs and the joint
+# [Twall_max, Nu_mean] pair, is read out by the SAME supervised split-conformal
+# classifier, so the comparison arms differ only in what the detector observes.
+DETECTORS = ("signature", "thermal_pair", "Twall_max", "Nu_mean", "fullfield_T")
+CONVENTIONAL = ("thermal_pair", "Twall_max", "Nu_mean")
+# "sensitivity" keeps its name: it is the measured TPR column that the committed
+# figure builder (src/thermal/make_thermal_figures.py) already reads.
 CSV_FIELDS = (
-    "type", "detector", "direction", "Pe", "sigma", "alpha",
-    "delta_alpha", "sensitivity", "detection_limit_delta_alpha",
+    "type", "detector", "direction", "Pe", "sigma", "alpha", "delta_alpha",
+    "n_ic", "sensitivity", "tpr_lo", "tpr_hi", "fpr_measured", "fpr_lo",
+    "fpr_hi", "fpr_target", "detection_limit_delta_alpha", "limit_lo",
+    "limit_hi", "limit_censored_fraction",
 )
 
 
-# signature detector: held-out classifier P(changed), threshold on nominal
-# scores at 5% FPR, sensitivity=TPR
-def supervised_sensitivity(nominal, changed, target_fpr=0.05):
-    X = A.feats(np.vstack([nominal, changed]))
-    y = np.r_[np.zeros(len(nominal)), np.ones(len(changed))]
-    g = np.r_[np.arange(len(nominal)), np.arange(len(changed))]
-    k = min(5, len(nominal))
-    proba = cross_val_predict(A._clf(), X, y, groups=g, cv=GroupKFold(k),
-                              method="predict_proba")[:, 1]
-    thr = np.percentile(proba[y == 0], 100 * (1 - target_fpr))
-    return float(np.mean(proba[y == 1] > thr))
-
-
-# scalar detector for a 1-D thermal output v: two-sided |v - median(nominal)|,
-# LOO-free threshold at 5% FPR
-def scalar_sensitivity(nom_vals, chg_vals, target_fpr=0.05):
-    nom = np.asarray(nom_vals, float)
-    chg = np.asarray(chg_vals, float)
-    center = np.median(nom)
-    thr = np.percentile(np.abs(nom - center), 100 * (1 - target_fpr))
-    return float(np.mean(np.abs(chg - center) > thr))
-
-
-def detection_limit(deltas, sensitivities):
-    """First 95%-sensitivity crossing, linearly interpolated in delta_alpha."""
-    deltas = np.asarray(deltas, dtype=float)
-    sensitivities = np.asarray(sensitivities, dtype=float)
-    hit = np.flatnonzero((deltas > 0.0) & (sensitivities >= TARGET_SENSITIVITY))
-    if len(hit) == 0:
-        return None
-    j = int(hit[0])
-    if j == 0:
-        return float(deltas[0])
-    x0, y0 = float(deltas[j - 1]), float(sensitivities[j - 1])
-    x1, y1 = float(deltas[j]), float(sensitivities[j])
-    if y1 <= y0:
-        return x1
-    return float(x0 + (TARGET_SENSITIVITY - y0) * (x1 - x0) / (y1 - y0))
-
-
-def _limit_text(value, direction):
-    if value is None:
-        return ">0.5 (strengthen)" if direction == "strengthen" else ">0.5"
-    return f"{value:.3f}"
+def _cell_seed(pe_index, sigma_index, direction_index, detector_index, alpha_index):
+    """One stable split-conformal stream per (Pe, sigma, direction, detector, alpha)."""
+    return (531_000 + 100_000 * pe_index + 10_000 * sigma_index
+            + 1_000 * direction_index + 100 * detector_index + alpha_index)
 
 
 def _noise_seed(pe_index, sigma_index, alpha_index, ic_index):
@@ -161,8 +131,9 @@ def _observe_detectors(clean_grids, refs, ics, a_th, pe_index, sigma_index, sigm
     """Compute every detector input from one noisy grid per (alpha, IC).
 
     The single ``observed`` grid below feeds the signature, both conventional
-    thermal scalars, and the naive full-field reference distance.  Thus their
-    performance differences cannot come from unequal noise realizations.
+    thermal scalars, their joint pair, and the naive full-field reference
+    distance.  Thus their performance differences cannot come from unequal noise
+    realizations, and every arm is read out by the same classifier afterwards.
     """
     observed = {}
     for alpha_index, alpha in enumerate(ALL_ALPHAS):
@@ -182,6 +153,7 @@ def _observe_detectors(clean_grids, refs, ics, a_th, pe_index, sigma_index, sigm
             fullfield[i] = np.linalg.norm(noisy_grid - refs[i])
         observed[float(alpha)] = {
             "signature": signatures,
+            "thermal_pair": np.column_stack([twall, nu]),
             "Twall_max": twall,
             "Nu_mean": nu,
             "fullfield_T": fullfield,
@@ -189,28 +161,82 @@ def _observe_detectors(clean_grids, refs, ics, a_th, pe_index, sigma_index, sigm
     return observed
 
 
-def _direction_result(observed, alphas):
-    """Calculate all detector curves and interpolated limits for one direction."""
+def _direction_result(observed, alphas, pe_index, sigma_index, direction_index):
+    """Measured detection curves and sampled-grid limits for one direction.
+
+    alpha=1 is the nominal reference and is never compared with itself, so only
+    the positive detunings carry a TPR, a measured false-alarm rate and
+    intervals.  The limit is the smallest SAMPLED positive delta whose point TPR
+    reaches the target, right-censored when no sampled delta does; its interval
+    resamples IC-level indicator vectors across the complete direction curve.
+    """
+    alphas = np.asarray([a for a in np.asarray(alphas, float)
+                         if not np.isclose(a, 1.0)], dtype=float)
     deltas = np.abs(alphas - 1.0)
     nominal = observed[1.0]
-    sensitivity = {}
-    limits = {}
+    tpr, tpr_ci, fpr, fpr_ci, limits = {}, {}, {}, {}, {}
+    for detector_index, detector in enumerate(DETECTORS):
+        cells = [
+            CC.split_conformal_detection(
+                nominal[detector], observed[float(alpha)][detector],
+                seed=_cell_seed(pe_index, sigma_index, direction_index,
+                                detector_index, alpha_index))
+            for alpha_index, alpha in enumerate(alphas)
+        ]
+        tpr[detector] = np.array([cell["tpr"] for cell in cells])
+        fpr[detector] = np.array([cell["fpr"] for cell in cells])
+        tpr_ci[detector] = np.array([cell["tpr_ci"] for cell in cells])
+        fpr_ci[detector] = np.array([cell["fpr_ci"] for cell in cells])
+        limits[detector] = {
+            "limit": CC.sampled_limit(deltas, tpr[detector], TARGET_SENSITIVITY),
+            **CC.bootstrap_limit(
+                deltas, np.vstack([cell["detect"] for cell in cells]),
+                TARGET_SENSITIVITY,
+                seed=_cell_seed(pe_index, sigma_index, direction_index,
+                                detector_index, 90)),
+        }
+    return {"alphas": alphas, "deltas": deltas, "tpr": tpr, "tpr_ci": tpr_ci,
+            "fpr": fpr, "fpr_ci": fpr_ci, "limits": limits, "n": N_IC}
+
+
+def _csv_rows(result):
+    """One nominal reference row, one measured curve row per detuning, one limit row.
+
+    The delta=0 nominal configuration carries no sensitivity: it is the reference
+    the detuned rows are measured against, not a detector against itself.
+    """
+    common = {"direction": result["direction"], "Pe": result["Pe"],
+              "sigma": f"{result['sigma']:.2f}", "n_ic": result["n"],
+              "fpr_target": f"{TARGET_FPR:.2f}"}
+    rows = []
     for detector in DETECTORS:
-        calculator = supervised_sensitivity if detector == "signature" else scalar_sensitivity
-        values = np.array(
-            [calculator(nominal[detector], observed[float(alpha)][detector])
-             for alpha in alphas],
-            dtype=float,
-        )
-        sensitivity[detector] = values
-        limits[detector] = detection_limit(deltas, values)
-    return deltas, sensitivity, limits
+        rows.append({"type": "nominal", "detector": detector, "alpha": "1.0",
+                     "delta_alpha": "0.0", **common})
+        for j, (alpha, delta) in enumerate(zip(result["alphas"], result["deltas"])):
+            rows.append({
+                "type": "curve", "detector": detector, "alpha": f"{alpha:.1f}",
+                "delta_alpha": f"{delta:.1f}",
+                "sensitivity": f"{result['tpr'][detector][j]:.6f}",
+                "tpr_lo": f"{result['tpr_ci'][detector][j][0]:.6f}",
+                "tpr_hi": f"{result['tpr_ci'][detector][j][1]:.6f}",
+                "fpr_measured": f"{result['fpr'][detector][j]:.6f}",
+                "fpr_lo": f"{result['fpr_ci'][detector][j][0]:.6f}",
+                "fpr_hi": f"{result['fpr_ci'][detector][j][1]:.6f}", **common})
+        limit = result["limits"][detector]
+        lo, hi = limit["limit_ci"]
+        rows.append({
+            "type": "limit", "detector": detector,
+            "detection_limit_delta_alpha": CC.limit_text(limit["limit"], MAX_DELTA),
+            "limit_lo": CC.limit_text(lo, MAX_DELTA),
+            "limit_hi": CC.limit_text(hi, MAX_DELTA),
+            "limit_censored_fraction": f"{limit['censored_fraction']:.4f}", **common})
+    return rows
 
 
 def _write_csv(rows):
     path = os.path.join(TAB, "thermal_detection_limit.csv")
     with open(path, "w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return path
@@ -220,103 +246,113 @@ def _limit_for_comparison(value):
     return np.inf if value is None else float(value)
 
 
-def _strictly_smaller(signature_limit, baseline_limit):
-    """Whether a finite signature crossing occurs before a baseline crossing."""
-    return signature_limit is not None and (
-        baseline_limit is None or signature_limit < baseline_limit - 1.0e-12
-    )
-
-
 def _print_curve_table(result):
-    print(f"\nRESULT TABLE :: Pe={result['Pe']} | {result['direction']} SUPG detuning")
-    print("  sigma  alpha  delta_a  signature  Twall_max  Nu_mean  fullfield_T")
-    print("  " + "-" * 70)
-    for sigma, alpha, delta, signature, twall, nu, fullfield in zip(
-        np.repeat(result["sigma"], len(result["alphas"])), result["alphas"], result["deltas"],
-        result["sensitivity"]["signature"], result["sensitivity"]["Twall_max"],
-        result["sensitivity"]["Nu_mean"], result["sensitivity"]["fullfield_T"],
-    ):
-        print(f"  {sigma:5.2f}  {alpha:5.1f}   {delta:5.1f}     {signature:6.3f}"
-              f"     {twall:6.3f}   {nu:6.3f}      {fullfield:6.3f}")
+    print(f"\nRESULT TABLE :: Pe={result['Pe']} | sigma={result['sigma']:.2f} | "
+          f"{result['direction']} SUPG detuning | n={result['n']} ICs (independent unit)")
+    print("  TPR of each detector at its measured split-conformal threshold")
+    print("  alpha  delta_a" + "".join(f"{name:>14s}" for name in DETECTORS))
+    print("  " + "-" * (15 + 14 * len(DETECTORS)))
+    for j, (alpha, delta) in enumerate(zip(result["alphas"], result["deltas"])):
+        print(f"  {alpha:5.1f}   {delta:5.1f}  "
+              + "".join(f"{result['tpr'][name][j]:14.3f}" for name in DETECTORS))
+    print("  measured false-alarm rate over this curve [min, max], target "
+          f"{TARGET_FPR:.2f}:")
+    for name in DETECTORS:
+        rates = result["fpr"][name]
+        print(f"    {name:<13s} [{rates.min():.3f}, {rates.max():.3f}]")
 
 
 def _print_limit_comparison(results):
-    print("\nHEADLINE COMPARISON :: 95% sensitivity detection limits (delta_alpha)")
-    print("  Pe  sigma  direction      signature  Twall_max  sig<Tw  Nu_mean  sig<Nu  fullfield_T  sig<field  sig <= both")
-    print("  " + "-" * 116)
+    print("\nHEADLINE COMPARISON :: sampled-grid detection limits (smallest sampled"
+          f" delta_alpha with TPR >= {TARGET_SENSITIVITY:.2f}; '>' means right-censored)")
+    print("  Pe  sigma  direction   signature  95% IC-bootstrap CI  censored"
+          + "".join(f"{name:>14s}" for name in CONVENTIONAL + ("fullfield_T",))
+          + "  sig <= all")
+    print("  " + "-" * 128)
     for result in results:
-        limit = result["limits"]
-        sig = _limit_for_comparison(limit["signature"])
-        better_both = (
-            limit["signature"] is not None
-            and sig <= _limit_for_comparison(limit["Twall_max"])
-            and sig <= _limit_for_comparison(limit["Nu_mean"])
-        )
+        limits = result["limits"]
+        signature = limits["signature"]
+        lo, hi = signature["limit_ci"]
+        no_worse = _no_worse_than_conventional(limits)
         print(f"  {result['Pe']:3d}  {result['sigma']:5.2f}  {result['direction']:>10}"
-              f"  {_limit_text(limit['signature'], result['direction']):>17}"
-              f"  {_limit_text(limit['Twall_max'], result['direction']):>9}"
-              f"  {'yes' if _strictly_smaller(limit['signature'], limit['Twall_max']) else 'no':>6}"
-              f"  {_limit_text(limit['Nu_mean'], result['direction']):>7}"
-              f"  {'yes' if _strictly_smaller(limit['signature'], limit['Nu_mean']) else 'no':>6}"
-              f"  {_limit_text(limit['fullfield_T'], result['direction']):>11}"
-              f"  {'yes' if _strictly_smaller(limit['signature'], limit['fullfield_T']) else 'no':>9}"
-              f"  {'yes' if better_both else 'no':>11}")
+              f"  {CC.limit_text(signature['limit'], MAX_DELTA):>10}"
+              f"  [{CC.limit_text(lo, MAX_DELTA):>6}, {CC.limit_text(hi, MAX_DELTA):>6}]"
+              f"  {signature['censored_fraction']:8.2f}"
+              + "".join(f"{CC.limit_text(limits[name]['limit'], MAX_DELTA):>14}"
+                        for name in CONVENTIONAL + ("fullfield_T",))
+              + f"  {'yes' if no_worse else 'no':>10}")
+
+
+def _no_worse_than_conventional(limits):
+    """Whether a finite signature limit is no larger than every matched arm."""
+    signature = limits["signature"]["limit"]
+    return signature is not None and all(
+        signature <= _limit_for_comparison(limits[name]["limit"])
+        for name in CONVENTIONAL + ("fullfield_T",))
 
 
 def _print_noise_summary(results):
-    print("\nSIGMA=0.01 CHECK :: first sampled signature detection point")
-    print("  Pe  direction   delta_a  signature  Twall_max  Nu_mean  both conventional outputs still <95%?")
-    print("  " + "-" * 94)
+    print("\nSIGMA=0.01 CHECK :: smallest sampled detuning the signature detects")
+    print("  Pe  direction   delta_a  signature" + "".join(
+        f"{name:>14s}" for name in CONVENTIONAL)
+        + "  all conventional arms still below target?")
+    print("  " + "-" * 118)
     sigma_results = [result for result in results if np.isclose(result["sigma"], 0.01)]
     buried_count = 0
     for result in sigma_results:
-        signature = result["sensitivity"]["signature"]
-        hit = np.flatnonzero((result["deltas"] > 0.0) & (signature >= TARGET_SENSITIVITY))
-        if len(hit) == 0:
-            print(f"  {result['Pe']:3d}  {result['direction']:>10}       >0.5       --        --       --  no signature 95% crossing")
+        limit = result["limits"]["signature"]["limit"]
+        if limit is None:
+            print(f"  {result['Pe']:3d}  {result['direction']:>10}      >0.5"
+                  "         --  no sampled detuning reaches the target")
             continue
-        j = int(hit[0])
-        twall = result["sensitivity"]["Twall_max"][j]
-        nu = result["sensitivity"]["Nu_mean"][j]
-        buried = twall < TARGET_SENSITIVITY and nu < TARGET_SENSITIVITY
+        j = int(np.argmin(np.abs(result["deltas"] - limit)))
+        others = [result["tpr"][name][j] for name in CONVENTIONAL]
+        buried = all(value < TARGET_SENSITIVITY for value in others)
         buried_count += int(buried)
         print(f"  {result['Pe']:3d}  {result['direction']:>10}     {result['deltas'][j]:5.1f}"
-              f"     {signature[j]:6.3f}     {twall:6.3f}   {nu:6.3f}"
-              f"              {'yes' if buried else 'no'}")
-    print(f"  Summary: {buried_count}/{len(sigma_results)} Pe/direction cells have a 95%-sensitive"
-          " signature while both noisy conventional outputs remain below 95% at that sampled detuning.")
+              f"     {result['tpr']['signature'][j]:6.3f}"
+              + "".join(f"{value:14.3f}" for value in others)
+              + f"  {'yes' if buried else 'no':>10}")
+    print(f"  Summary: {buried_count}/{len(sigma_results)} Pe/direction cells reach the"
+          " target with the signature while every conventional arm, read out by the same"
+          " classifier, stays below it at that sampled detuning.")
     return buried_count, len(sigma_results)
 
 
 def _verdict(results, buried_count, sigma_cells):
-    conventional_cells = []
-    strict_both = 0
-    fullfield_no_worse = 0
-    for result in results:
-        limit = result["limits"]
-        sig = _limit_for_comparison(limit["signature"])
-        twall = _limit_for_comparison(limit["Twall_max"])
-        nu = _limit_for_comparison(limit["Nu_mean"])
-        field = _limit_for_comparison(limit["fullfield_T"])
-        is_no_worse = limit["signature"] is not None and sig <= twall and sig <= nu
-        conventional_cells.append(is_no_worse)
-        strict_both += int(limit["signature"] is not None and sig < twall and sig < nu)
-        fullfield_no_worse += int(limit["signature"] is not None and sig <= field)
-
-    n_cells = len(conventional_cells)
-    n_no_worse = sum(conventional_cells)
+    no_worse = [_no_worse_than_conventional(result["limits"]) for result in results]
+    strict = sum(
+        result["limits"]["signature"]["limit"] is not None
+        and all(result["limits"]["signature"]["limit"]
+                < _limit_for_comparison(result["limits"][name]["limit"])
+                for name in CONVENTIONAL)
+        for result in results)
+    censored = sum(result["limits"]["signature"]["limit"] is None for result in results)
+    every_fpr = np.concatenate([result["fpr"][name]
+                                for result in results for name in DETECTORS])
+    n_cells = len(no_worse)
+    n_no_worse = sum(no_worse)
     verdict_go = n_no_worse > n_cells / 2.0
-    print("\nCHANCE / FALSE-POSITIVE RATE: all detector thresholds are calibrated to a 5.0%"
-          " nominal false-positive target.  At alpha=1, strict '>' thresholding may report below"
-          " 5.0% when held-out scores are tied; it never grants a detector an uncalibrated threshold.")
+    print("\nFALSE-ALARM RATE: every detector shares one supervised split-conformal"
+          f" read-out.  Each test fold's classifier is fitted on its own training ICs"
+          f" only, and that single model scores both the {CC.N_CAL} calibration nominal"
+          " ICs and the untouched test ICs, so the per-IC false-alarm probability is"
+          f" bounded by {CC.N_CAL + 1 - CC.CAL_RANK}/{CC.N_CAL + 1} = {TARGET_FPR:.2f}"
+          " exactly under exchangeability.  Training, calibration and test ICs are"
+          " pairwise disjoint, and the rate above is MEASURED on the test ICs.")
+    print(f"  measured over all {every_fpr.size} detector/detuning cells:"
+          f" median={np.median(every_fpr):.3f}, max={every_fpr.max():.3f}"
+          f" (target {TARGET_FPR:.2f}); each cell's 95% IC-cluster interval is in the"
+          " CSV, and nominal alpha=1 appears only as a reference row.")
     print("\n" + "=" * 104)
     print(f"[{'GO' if verdict_go else 'CHECK'} / VERDICT] thermal detection limit of silent SUPG tau-scale changes")
     print("=" * 104)
-    print(f"  Signature limit <= BOTH Twall_max and Nu_mean limits in {n_no_worse}/{n_cells} Pe/sigma/direction cells"
-          f" (strictly smaller than both in {strict_both}/{n_cells});"
-          f" signature limit <= naive full-field distance in {fullfield_no_worse}/{n_cells} cells.")
-    print(f"  At sigma=0.01, {buried_count}/{sigma_cells} cells reach 95% signature sensitivity while both"
-          " conventional noisy-grid outputs are still below 95% at the first signature-detected detuning.")
+    print(f"  Signature limit <= every matched conventional arm in {n_no_worse}/{n_cells}"
+          f" Pe/sigma/direction cells (strictly smaller than all three thermal arms in"
+          f" {strict}/{n_cells}); the signature limit is right-censored above"
+          f" delta_alpha={MAX_DELTA:.1f} in {censored}/{n_cells} cells.")
+    print(f"  At sigma=0.01, {buried_count}/{sigma_cells} cells reach the target with the"
+          " signature while every conventional arm stays below it at that sampled detuning.")
     if verdict_go:
         print("  The output signature detects the numerical change before conventional thermal outputs reliably reveal it.")
     else:
@@ -338,9 +374,23 @@ def main():
           f"working mesh=60x20, seed=2026")
     print(f"          weaken={[float(alpha) for alpha in ALPHAS_WEAK]} | "
           f"strengthen={[float(alpha) for alpha in ALPHAS_STRONG]} | "
-          f"sigma={list(SIGMAS)} | target FPR={TARGET_FPR:.2f}, target TPR={TARGET_SENSITIVITY:.2f}")
-    print("Observation rule: one RMS-relative noisy 64x64 grid feeds signature, Twall_max, Nu_mean,"
-          " and fullfield_T; grid scalars use the IC-specific heated bottom-wall extraction.")
+          f"sigma={list(SIGMAS)} | target TPR={TARGET_SENSITIVITY:.2f}")
+    print("Observation rule: one RMS-relative noisy 64x64 grid feeds signature, thermal_pair,"
+          " Twall_max, Nu_mean, and fullfield_T; grid scalars use the IC-specific heated"
+          " bottom-wall extraction.")
+    folds = CC.choose_folds(N_IC)
+    print(f"Detection: every detector, including the one-dimensional thermal outputs, is read"
+          f" out by the same supervised split-conformal classifier ({CC.REPEATS} repeats of"
+          f" {folds} disjoint splits by IC: {N_IC - CC.N_CAL - N_IC // folds} training,"
+          f" {CC.N_CAL} calibration and {N_IC // folds} test ICs per fold, threshold = the"
+          f" maximum of the {CC.N_CAL} calibration nominal scores).  The per-IC false-alarm"
+          f" probability is bounded by {TARGET_FPR:.2f} exactly under exchangeability and is"
+          " MEASURED on the untouched test ICs; nominal alpha=1 is a reference row only,"
+          " never compared with itself.")
+    print(f"Limits: smallest SAMPLED positive delta_alpha whose point TPR reaches"
+          f" {TARGET_SENSITIVITY:.2f}, right-censored above {MAX_DELTA:.1f} when none does."
+          f"  Intervals: {CC.N_BOOT}-replicate IC-cluster percentile bootstrap; n={N_IC} ICs"
+          " is the effective sample size (repeats and folds never enter it).")
 
     ics = [HC.make_thermal_ic(1000 + i) for i in range(N_IC)]
     pts, elems, tags = HC.make_channel_mesh(60, 20, seed=2026)
@@ -366,26 +416,13 @@ def main():
             observed = _observe_detectors(
                 clean_grids, refs, ics, a_th, pe_index, sigma_index, sigma,
             )
-            for direction, alphas in DIRECTIONS:
-                deltas, sensitivity, limits = _direction_result(observed, alphas)
-                result = {
-                    "Pe": int(pe), "sigma": float(sigma), "direction": direction,
-                    "alphas": alphas, "deltas": deltas, "sensitivity": sensitivity,
-                    "limits": limits,
-                }
+            for direction_index, (direction, alphas) in enumerate(DIRECTIONS):
+                result = _direction_result(observed, alphas, pe_index, sigma_index,
+                                           direction_index)
+                result.update({"Pe": int(pe), "sigma": float(sigma),
+                               "direction": direction})
                 results.append(result)
-                for detector in DETECTORS:
-                    for alpha, delta, value in zip(alphas, deltas, sensitivity[detector]):
-                        csv_rows.append({
-                            "type": "curve", "detector": detector, "direction": direction,
-                            "Pe": int(pe), "sigma": f"{sigma:.2f}", "alpha": f"{alpha:.1f}",
-                            "delta_alpha": f"{delta:.1f}", "sensitivity": f"{value:.6f}",
-                        })
-                    csv_rows.append({
-                        "type": "limit", "detector": detector, "direction": direction,
-                        "Pe": int(pe), "sigma": f"{sigma:.2f}",
-                        "detection_limit_delta_alpha": _limit_text(limits[detector], direction),
-                    })
+                csv_rows.extend(_csv_rows(result))
 
     for result in results:
         _print_curve_table(result)

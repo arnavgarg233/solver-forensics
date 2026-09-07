@@ -30,3 +30,6 @@ results/figures/*.png
 build/
 dist/
 .mplcache/
+
+# regenerable solver-field caches
+results/cache/

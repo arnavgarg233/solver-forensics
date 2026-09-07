@@ -1,0 +1,9 @@
+protocol_id,protocol_hash,method,noise,direction,published_limit,widened_limit,limit_resolved,limit_delta_alpha,max_sampled_delta_alpha,n_ic,sigma,grid_n,library,target_tpr,solver_health_pass,positive_control_pass,resolution_pass
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,white,weaken,0.4,0.4,True,0.4000,0.9,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,white,strengthen,0.4,0.4,True,0.4000,1.0,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,lowpass,weaken,>0.5,0.8,True,0.8000,0.9,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,lowpass,strengthen,>0.5,>1.0,False,,1.0,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,gradient,weaken,>0.5,>0.9,False,,0.9,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,gradient,strengthen,>0.5,>1.0,False,,1.0,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,multiplicative,weaken,>0.5,0.8,True,0.8000,0.9,60,0.01,64,base5,0.95,True,True,True
+structured-noise-extended-range-v1,d63ad94619d6d63ec4904dfb1dc1f16e4985827a576889347b8eae8c31d5097b,decision_average,multiplicative,strengthen,>0.5,>1.0,False,,1.0,60,0.01,64,base5,0.95,True,True,True

@@ -47,7 +47,7 @@ def scalar_sensitivity(nom_vals, chg_vals, target_fpr=0.05):     # 1-D battery o
 
 def decide(grid_controlled, sensitivity, fpr=0.05, detect_thr=0.50):
     if sensitivity <= 0.15: return "NO-FAULT"
-    if not grid_controlled and sensitivity > detect_thr: return "INDETERMINATE"
+    if not grid_controlled: return "INDETERMINATE"
     return "DETECT"
 
 
@@ -139,8 +139,13 @@ def _grid_sensitivity(fine_signatures, coarse_signatures, target_fpr=TARGET_FPR)
 
 def _record(results, nominal, changed, row, change_type, description,
             desired, grid_controlled=True, detector=supervised_sensitivity):
-    changed = _check_signatures(changed, f"row {row} changed population")
-    sensitivity = detector(nominal, changed, target_fpr=TARGET_FPR)
+    populations = changed if isinstance(changed, (list, tuple)) else [changed]
+    populations = [_check_signatures(population, f"row {row} changed population")
+                   for population in populations]
+    sensitivity = float(np.mean([
+        detector(nominal, population, target_fpr=TARGET_FPR)
+        for population in populations
+    ]))
     decision = decide(grid_controlled, sensitivity, fpr=TARGET_FPR,
                       detect_thr=0.50)
     result = {
@@ -161,7 +166,7 @@ def _write_csv(results):
     fields = ("row", "change_type", "description", "sensitivity",
               "desired", "decision", "correct")
     with open(path, "w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for result in results:
             row = dict(result)
@@ -275,7 +280,7 @@ def main():
             noise_seed=NOISE_SEED + 400 + index,
         ))
     _record(
-        results, nominal_sigs, np.vstack(heat_sigs),
+        results, nominal_sigs, heat_sigs,
         4, "operating", "heat generation q_base scaled by -10%, +10%, -20%, +20% (matched references)",
         "NO-FAULT",
     )
@@ -290,7 +295,7 @@ def main():
             noise_seed=NOISE_SEED + 500 + index,
         ))
     _record(
-        results, nominal_sigs, np.vstack(flow_sigs),
+        results, nominal_sigs, flow_sigs,
         5, "operating", "coolant Ubar scaled by -10%, +10%, -20%, +20% (matched references)",
         "NO-FAULT",
     )
@@ -306,7 +311,7 @@ def main():
             noise_seed=NOISE_SEED + 600 + index,
         ))
     _record(
-        results, nominal_sigs, np.vstack(inlet_sigs),
+        results, nominal_sigs, inlet_sigs,
         6, "operating", "inlet-ramp operating profile set to +3 K and -3 K (matched references)",
         "NO-FAULT",
     )
@@ -332,7 +337,7 @@ def main():
     if B.KB != old_kb or B.K_BY_REGION["cell"] != old_cell_k:
         raise RuntimeError("cell conductivity monkeypatch was not restored")
     _record(
-        results, nominal_sigs, np.vstack(conductivity_sigs),
+        results, nominal_sigs, conductivity_sigs,
         7, "operating", "cell conductivity KB scaled by -10% and +10% (matched references)",
         "NO-FAULT",
     )
@@ -349,7 +354,7 @@ def main():
             noise_seed=NOISE_SEED + 800 + index,
         ))
     _record(
-        results, nominal_sigs, np.vstack(imbalance_sigs),
+        results, nominal_sigs, imbalance_sigs,
         8, "operating", "one-cell heat-generation factor set to +10% and -10% (physical change; matched references)",
         "NO-FAULT",
     )
@@ -388,7 +393,7 @@ def main():
     _print_result_table(results)
     print(f"\nchance/FPR: target false-positive rate={TARGET_FPR:.2f} (95% specificity); "
           f"threshold is the {100 * (1 - TARGET_FPR):.1f}th percentile of nominal held-out probabilities")
-    print("decision thresholds: sensitivity <=0.15 -> NO-FAULT; grid-uncontrolled sensitivity >0.50 -> INDETERMINATE")
+    print("decision thresholds: sensitivity <=0.15 -> NO-FAULT; grid-uncontrolled sensitivity >0.15 -> INDETERMINATE")
     print(f"SUPG-vs-ArtVisc separability: sensitivity={row3['sensitivity']:.3f} (row 3)")
 
     correct = sum(result["correct"] for result in results)

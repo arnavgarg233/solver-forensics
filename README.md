@@ -17,8 +17,8 @@ robust than it under library misspecification; the contribution is the audit bui
 | | |
 |---|---|
 | **Signature** | unit-normalized direction of `c` in `r = u − u_ref ≈ Σ_p c_p ∂_xᵖ u` |
-| **Validation** | `GroupKFold` by initial condition + a label-permutation floor on every score |
-| **Reach** | finite differences, finite volume, finite elements - linear advection, Burgers, KdV/Kawahara, 2D advection-diffusion, elastic-wave & SUPG FEM, and a real third-party library (`py-pde`) |
+| **Validation** | paired splits by initial condition, split-conformal thermal thresholds, and permutation floors for attribution tasks |
+| **Reach** | finite differences, flux-form methods, finite elements - linear advection, Burgers, KdV/Kawahara, 2D advection-diffusion, elastic-wave & SUPG FEM, and a real third-party library (`py-pde`) |
 
 ## Headline results
 
@@ -34,9 +34,8 @@ It holds across solvers, dimensions, and paradigms (full numbers in `results/tab
 |---|---|
 | open-solver audit (`py-pde`), hidden scheme change | **1.00 / 0.98** (clean / 1% noise) |
 | 2D advection-diffusion audit | **0.99 - 1.00** |
-| real library, documented integrator change | **0.99**, signature matches the changelog |
 | **SUPG at 2D engineering scale** (rotating flow, Pe≈13) | presence **0.975**, silent-τ detuning **0.96-1.00** |
-| production schemes, 9-way identification | **0.88** (full coefficient vector) |
+| production schemes, 10 labels / 9 distinct maps | **0.88** (full coefficient vector; alias ceiling 0.90) |
 | FEM element order, convergence rate | detection **1.00** |
 | dense vs sparse recovery (SITE/STLSQ) | matched on support; more robust under over-specification |
 
@@ -73,8 +72,8 @@ label-permutation floor and a GO / KILL decision, and writes metrics to `results
 pip install -r requirements.txt
 ```
 
-CPU-only, tested on macOS / Apple Silicon and Linux. Deterministic given the in-script fixed
-seeds; NumPy-2 compatible.
+CPU-only, tested on macOS / Apple Silicon and Linux with Python 3.10.20 and the exact
+package versions in `requirements.txt`. Fixed in-script seeds make each pinned-environment run deterministic.
 
 ## Reproducing
 
@@ -82,7 +81,19 @@ seeds; NumPy-2 compatible.
 python src/attribution/coefficient_attribution.py   # any experiment runs standalone
 python src/audit/audit_2d.py                         # 2D audit
 python scripts/make_figures.py                       # regenerate the paper figures
+
+python src/audit/library_multires_audit.py                  # py-pde integrator audit
+python src/thermal/thermal_mesh_sensitivity.py --cache      # working-mesh sensitivity
+python src/thermal/structured_noise_extended.py --cache     # structured-noise limits
+python src/battery/battery_coupling_sensitivity.py --cache  # conjugate-coupling map
+python src/external/openfoam_3d_audit.py --mode full        # OpenFOAM 3D transient
+python src/external/openfoam_turbulent_audit.py --mode full # OpenFOAM k-omega SST
 ```
+
+Each script fixes its protocol and thresholds before computing any outcome and
+writes a table or JSON report. The two OpenFOAM audits need Docker: they pull a
+container pinned by image digest, stop if the image or solver version does not
+match, and parse the discretization scheme back out of each generated case.
 
 ## Use it on your own solver
 
@@ -122,8 +133,7 @@ every call comes with its own admissibility check, not just a number.
 }
 ```
 
-The exact code and results used in the paper are archived at release
-[`v1.0.0`](https://github.com/arnavgarg233/solver-forensics/releases/tag/v1.0.0).
+Releases are archived on GitHub: [`v1.0.0`](https://github.com/arnavgarg233/solver-forensics/releases/tag/v1.0.0) and [`v1.1.0`](https://github.com/arnavgarg233/solver-forensics/releases/tag/v1.1.0).
 
 ## License
 

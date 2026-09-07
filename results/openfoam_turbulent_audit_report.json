@@ -1,0 +1,249 @@
+{
+  "gates": [
+    {
+      "gate": {
+        "comparison": "le",
+        "lower": null,
+        "metric": "solver_failure_count",
+        "name": "all 60 turbulent cases completed",
+        "upper": 0.0
+      },
+      "passed": true,
+      "value": 0.0
+    },
+    {
+      "gate": {
+        "comparison": "le",
+        "lower": null,
+        "metric": "receipt_failure_count",
+        "name": "every parsed fvSchemes receipt matches",
+        "upper": 0.0
+      },
+      "passed": true,
+      "value": 0.0
+    },
+    {
+      "gate": {
+        "comparison": "ge",
+        "lower": 2.0,
+        "metric": "minimum_nut_ratio",
+        "name": "turbulence model is genuinely active",
+        "upper": null
+      },
+      "passed": true,
+      "value": 112.35800409
+    },
+    {
+      "gate": {
+        "comparison": "ge",
+        "lower": 1e-06,
+        "metric": "minimum_scheme_delta",
+        "name": "scheme contrast changes every paired field",
+        "upper": null
+      },
+      "passed": true,
+      "value": 0.016236085327263405
+    },
+    {
+      "gate": {
+        "comparison": "ge",
+        "lower": 0.8,
+        "metric": "grouped_accuracy",
+        "name": "grouped leave-one-operating-case-out accuracy",
+        "upper": null
+      },
+      "passed": true,
+      "value": 1.0
+    },
+    {
+      "gate": {
+        "comparison": "ge",
+        "lower": 0.75,
+        "metric": "coarse_to_fine_accuracy",
+        "name": "coarse-library to fine-field transfer",
+        "upper": null
+      },
+      "passed": true,
+      "value": 0.9
+    },
+    {
+      "gate": {
+        "comparison": "ge",
+        "lower": 0.75,
+        "metric": "fine_to_coarse_accuracy",
+        "name": "fine-library to coarse-field transfer",
+        "upper": null
+      },
+      "passed": true,
+      "value": 0.85
+    },
+    {
+      "gate": {
+        "comparison": "between",
+        "lower": 0.49,
+        "metric": "negative_control_accuracy",
+        "name": "duplicate-field negative control is chance",
+        "upper": 0.51
+      },
+      "passed": true,
+      "value": 0.5
+    },
+    {
+      "gate": {
+        "comparison": "le",
+        "lower": null,
+        "metric": "reference_median_relative_l2",
+        "name": "reference ladder median disagreement",
+        "upper": 0.02
+      },
+      "passed": true,
+      "value": 0.0037114793803031346
+    },
+    {
+      "gate": {
+        "comparison": "le",
+        "lower": null,
+        "metric": "reference_max_relative_l2",
+        "name": "reference ladder maximum disagreement",
+        "upper": 0.05
+      },
+      "passed": true,
+      "value": 0.004960471495281733
+    },
+    {
+      "gate": {
+        "comparison": "le",
+        "lower": null,
+        "metric": "reference_to_candidate_error_ratio",
+        "name": "reference error is below candidate error",
+        "upper": 0.5
+      },
+      "passed": true,
+      "value": 0.1436220597923138
+    }
+  ],
+  "manifest": {
+    "image_reference": "openeuler/openfoam@sha256:a9e2ee499bca06b43bfe330de779e675c496687420a4ab3bec2316f20a693d4a",
+    "meshes": {
+      "coarse": {
+        "name": "coarse",
+        "nx": 20,
+        "ny": 10,
+        "nz": 10
+      },
+      "fine": {
+        "name": "fine",
+        "nx": 28,
+        "ny": 14,
+        "nz": 14
+      },
+      "reference": {
+        "name": "reference",
+        "nx": 80,
+        "ny": 40,
+        "nz": 40
+      },
+      "reference_check": {
+        "name": "reference_check",
+        "nx": 96,
+        "ny": 48,
+        "nz": 48
+      }
+    },
+    "mode": "full",
+    "operating_cases": [
+      {
+        "case_id": "op00",
+        "intensity": 0.05,
+        "nu": 2e-05,
+        "reynolds": 49999.99999999999,
+        "velocity": 1.0
+      },
+      {
+        "case_id": "op01",
+        "intensity": 0.05,
+        "nu": 1e-05,
+        "reynolds": 99999.99999999999,
+        "velocity": 1.0
+      },
+      {
+        "case_id": "op02",
+        "intensity": 0.04,
+        "nu": 2e-05,
+        "reynolds": 59999.99999999999,
+        "velocity": 1.2
+      },
+      {
+        "case_id": "op03",
+        "intensity": 0.06,
+        "nu": 1.2e-05,
+        "reynolds": 100000.0,
+        "velocity": 1.2
+      },
+      {
+        "case_id": "op04",
+        "intensity": 0.05,
+        "nu": 2e-05,
+        "reynolds": 75000.0,
+        "velocity": 1.5
+      },
+      {
+        "case_id": "op05",
+        "intensity": 0.03,
+        "nu": 1e-05,
+        "reynolds": 150000.0,
+        "velocity": 1.5
+      },
+      {
+        "case_id": "op06",
+        "intensity": 0.05,
+        "nu": 1.6e-05,
+        "reynolds": 50000.00000000001,
+        "velocity": 0.8
+      },
+      {
+        "case_id": "op07",
+        "intensity": 0.07,
+        "nu": 1e-05,
+        "reynolds": 80000.0,
+        "velocity": 0.8
+      },
+      {
+        "case_id": "op08",
+        "intensity": 0.04,
+        "nu": 2e-05,
+        "reynolds": 99999.99999999999,
+        "velocity": 2.0
+      },
+      {
+        "case_id": "op09",
+        "intensity": 0.05,
+        "nu": 1.2e-05,
+        "reynolds": 166666.66666666666,
+        "velocity": 2.0
+      }
+    ],
+    "protocol_id": "openfoam-turbulent-rans-3d-v1",
+    "schemes": {
+      "linearUpwind": "bounded Gauss linearUpwind grad(U)",
+      "upwind": "bounded Gauss upwind"
+    },
+    "solver": "simpleFoam",
+    "turbulence_model": "kOmegaSST"
+  },
+  "metrics": {
+    "coarse_to_fine_accuracy": 0.9,
+    "completed_case_count": 60.0,
+    "fine_to_coarse_accuracy": 0.85,
+    "grouped_accuracy": 1.0,
+    "minimum_nut_ratio": 112.35800409,
+    "minimum_scheme_delta": 0.016236085327263405,
+    "negative_control_accuracy": 0.5,
+    "receipt_failure_count": 0.0,
+    "reference_max_relative_l2": 0.004960471495281733,
+    "reference_median_relative_l2": 0.0037114793803031346,
+    "reference_to_candidate_error_ratio": 0.1436220597923138,
+    "solver_failure_count": 0.0
+  },
+  "verdict": "GO"
+}

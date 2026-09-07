@@ -156,6 +156,7 @@ def _read_curves(Pe, sigma, direction):
 def fig_signature_vs_thermal():
     Pe, sigma = 100.0, 0.01
     styles = {"signature": (BLUE, "o", "modified-equation signature"),
+              "thermal_pair": ("#9467bd", "v", "joint wall $T$ and mean Nusselt"),
               "Twall_max": (RED, "s", "peak wall $T$"),
               "Nu_mean": (ORANGE, "^", "mean Nusselt"),
               "fullfield_T": (GREY, "D", "full-field $T$ distance")}
@@ -174,9 +175,9 @@ def fig_signature_vs_thermal():
         ax.set_xlabel(r"detuning $|\Delta\alpha|$")
         ax.set_ylim(-0.02, 1.03)
         ax.set_title(f"{direction} ($Pe={Pe:.0f}$, $\\sigma={sigma}$)", fontsize=10)
-    axes[0].set_ylabel("detection sensitivity (TPR at 5% FPR)")
-    axes[0].legend(frameon=False, fontsize=8, loc="center right")
-    fig.suptitle("The signature detects silent stabilization changes that thermal outputs miss",
+    axes[0].set_ylabel("detection sensitivity at the 5% split-conformal level")
+    axes[0].legend(frameon=False, fontsize=7.5, loc="center right")
+    fig.suptitle("Detection of stabilization detuning against matched thermal baselines",
                  fontsize=11, y=1.02)
     out = os.path.join(FIGS, "fig_signature_vs_thermal.png")
     fig.savefig(out); plt.close(fig); print(f"  -> {out}")
