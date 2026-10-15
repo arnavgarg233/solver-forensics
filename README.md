@@ -1,6 +1,8 @@
 # solver-forensics
 
-**A modified-equation signature method for identifying hidden discretization schemes** - identify the numerical scheme inside a black-box solver from its output alone.
+**Published paper:** [Modified-equation-informed solution-discrepancy signatures detect hidden stabilization changes in convective heat-transfer solvers](https://doi.org/10.1016/j.icheatmasstransfer.2026.112849) in *International Communications in Heat and Mass Transfer* (2026).
+
+Identify the numerical scheme inside a black-box solver from its output alone.
 
 Every consistent discretization solves not the target equation but a nearby *modified
 equation*, whose leading correction terms are fixed by the scheme. The residual between a
@@ -126,10 +128,12 @@ every call comes with its own admissibility check, not just a number.
 
 ```bibtex
 @article{garg2026modified,
-  title   = {A modified-equation signature method for identifying hidden discretization schemes},
+  title   = {Modified-equation-informed solution-discrepancy signatures detect hidden stabilization changes in convective heat-transfer solvers},
   author  = {Garg, Arnav},
-  journal = {Under review},
-  year    = {2026}
+  journal = {International Communications in Heat and Mass Transfer},
+  year    = {2026},
+  doi     = {10.1016/j.icheatmasstransfer.2026.112849},
+  url     = {https://doi.org/10.1016/j.icheatmasstransfer.2026.112849},
 }
 ```
 
